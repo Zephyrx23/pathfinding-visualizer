@@ -1,7 +1,37 @@
-.node {
+.NODE, .START, .TARGET, .WALL, .HOVER, .HOVER_LEAVE {
     width: 1.5em;
     height: 1.5em;
-    outline: 1px solid rgba(255, 255, 255, 0.25);
+    outline: 1px solid rgba(255, 255, 255, 0.20);
     display: inline-block; 
     vertical-align: top;
 }
+
+.NODE {
+    background-color: rgba(0,0,0,0);
+}
+
+.START {
+    background-color: rgba(0,255,0,0.75);
+}
+
+.TARGET {
+    background-color: rgba(255,0,0,0.75);
+}
+
+.WALL {
+    background-color: #7289DA;
+}
+
+.HOVER {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+.HOVER_LEAVE {
+    animation-name: example;
+    animation-duration: 0.5s;
+}
+
+@keyframes example {
+    0% {background-color: rgba(255, 255, 255, 0.075)}
+    100% {background-color: rgba(0,0,0,0)}
+  }

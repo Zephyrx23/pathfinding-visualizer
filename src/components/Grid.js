@@ -1,32 +1,33 @@
 import React from 'react'
 import Node from "./Node.js";
-import './Node.css'
 
-const Row = ({col, handleMouseDown, handleMouseEnter}) => {
+const Row = ({col, grid, setGrid}) => {
     return(
         <div>
             {col.map((node, rowIdx) => {
-                // console.log(`Row: ${node.row}, Col: ${node.col}`);
+                if (node.type === "WALL") {
+                    console.log(`Row: ${node.row}, Col: ${node.col} is WALL`);
+                }
                 return (<Node
                     key={rowIdx}
                     row={node.row}
                     col={node.col}
-                    handleMouseDown={() => handleMouseDown(node.row, node.col)}
-                    handleMouseEnter={() => handleMouseEnter(node.row, node.col)}
+                    grid={grid}
+                    setGrid={setGrid}
                 />)
             })}
         </div>
     )
 }
 
-const Grid = ({grid, handleMouseDown, handleMouseEnter}) => {
+const Grid = ({grid, setGrid}) => {
     
     return (grid.map((col, colIdx) => {
             return (<Row 
                 key={colIdx}
                 col={col} 
-                handleMouseDown={handleMouseDown} 
-                handleMouseEnter={handleMouseEnter}
+                grid={grid}
+                setGrid={setGrid}
             /> )
         })
     )
