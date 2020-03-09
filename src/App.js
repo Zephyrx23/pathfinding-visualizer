@@ -10,6 +10,7 @@ const TARGET_NODE = {row: 10, col: 25}
 
 const App = () => {
     const [ grid, setGrid ] = useState(initializeGrid())
+    const [ mousePressed, setMousePressed ] = useState(false)
 
     useEffect(() => {
         document.body.style = 'background: #2C2F33;';
@@ -25,6 +26,8 @@ const App = () => {
             <Grid 
                 grid={grid} 
                 setGrid={setGrid}
+                mousePressed={mousePressed}
+                setMousePressed={setMousePressed}
             />
         </div>
     )

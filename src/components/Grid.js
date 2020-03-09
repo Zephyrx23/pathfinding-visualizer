@@ -1,26 +1,28 @@
 import React from 'react'
 import Node from "./Node.js";
 
-const Row = ({col, grid, setGrid}) => {
+const Row = ({col, grid, setGrid, mousePressed, setMousePressed}) => {
     return(
         <div>
             {col.map((node, rowIdx) => {
-                if (node.type === "WALL") {
-                    console.log(`Row: ${node.row}, Col: ${node.col} is WALL`);
-                }
+                // if (node.type === "WALL") {
+                //     console.log(`Row: ${node.row}, Col: ${node.col} is WALL`);
+                // }
                 return (<Node
                     key={rowIdx}
                     row={node.row}
                     col={node.col}
                     grid={grid}
                     setGrid={setGrid}
+                    mousePressed={mousePressed}
+                    setMousePressed={setMousePressed}
                 />)
             })}
         </div>
     )
 }
 
-const Grid = ({grid, setGrid}) => {
+const Grid = ({grid, setGrid, mousePressed, setMousePressed}) => {
     
     return (grid.map((col, colIdx) => {
             return (<Row 
@@ -28,6 +30,8 @@ const Grid = ({grid, setGrid}) => {
                 col={col} 
                 grid={grid}
                 setGrid={setGrid}
+                mousePressed={mousePressed}
+                setMousePressed={setMousePressed}
             /> )
         })
     )
