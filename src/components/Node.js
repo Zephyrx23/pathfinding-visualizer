@@ -4,19 +4,27 @@ const Node = ({row, col, grid, setGrid, mousePressed, setMousePressed}) => {
     const [ nodeType, setType ] = useState(grid[row][col].type)
     
     const handleMouseDown = () => {
-        setGrid(getGridWithWall(grid, row, col))
-        setType("WALL")
+        const newType = nodeType === "WALL" ? "NODE" : "WALL"
+        grid[row][col].type = newType
+        grid[row][col].isWall = !grid[row][col].isWall
+        setType(newType)
         setMousePressed(true)
     }
 
     const handleMouseUp = () => {
+        const newGrid = grid.slice()
+        setGrid(newGrid)
         setMousePressed(false)
     }
 
     const handleMouseEnter = () => {
         if (mousePressed) {
-            setGrid(getGridWithWall(grid, row, col))
-            setType("WALL")
+            if (nodeType !== "START" || nodeType !== "TARGET") {
+                const newType = nodeType === "WALL" ? "NODE" : "WALL"
+                grid[row][col].type = newType
+                grid[row][col].isWall = !grid[row][col].isWall
+                setType(newType)
+            }
             return
         }
 
@@ -43,11 +51,11 @@ const Node = ({row, col, grid, setGrid, mousePressed, setMousePressed}) => {
     )
 }
 
-const getGridWithWall = (grid, row, col) => {
-    const newGrid = grid.slice()
-    newGrid[row][col].type = "WALL"
-    newGrid[row][col].isWall = true
-    return(newGrid)
-}
+// const getGridWithWall = (grid, row, col) => {
+//     const newGrid = grid.slice()
+//     newGrid[row][col].type = "WALL"
+//     newGrid[row][col].isWall = true
+//     return(newGrid)
+// }
 
 export default Node

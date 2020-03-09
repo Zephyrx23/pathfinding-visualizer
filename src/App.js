@@ -11,25 +11,30 @@ const TARGET_NODE = {row: 10, col: 25}
 const App = () => {
     const [ grid, setGrid ] = useState(initializeGrid())
     const [ mousePressed, setMousePressed ] = useState(false)
+    const tempGrid = grid
 
-    useEffect(() => {
-        document.body.style = 'background: #2C2F33;';
-    })
+    const handleMouseUp = () => {
+        const newGrid = tempGrid.slice()
+        setGrid(newGrid)
+        setMousePressed(false)
+    }
 
-    // const handleMouseDown = (row, col) => {
-    //     console.log(`Mouse is down on ${col}-${row}`);
-    // }
-
+    // useEffect(() => {
+    //     document.body.addEventListener(onmouseup, handleMouseUp)
+    // }, [])
 
     return (
-        <div className="App">            
+        <>
+        <div className="App" onMouseLeave={handleMouseUp}>            
             <Grid 
-                grid={grid} 
+                grid={tempGrid} 
                 setGrid={setGrid}
                 mousePressed={mousePressed}
                 setMousePressed={setMousePressed}
             />
         </div>
+        <div className="footer">2020 Zephyrx23</div>
+        </>
     )
 }
 
