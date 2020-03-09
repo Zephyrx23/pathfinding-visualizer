@@ -4,10 +4,13 @@ const Node = ({row, col, grid, setGrid, mousePressed, setMousePressed}) => {
     const [ nodeType, setType ] = useState(grid[row][col].type)
     
     const handleMouseDown = () => {
-        const newType = nodeType === "WALL" ? "NODE" : "WALL"
-        grid[row][col].type = newType
-        grid[row][col].isWall = !grid[row][col].isWall
-        setType(newType)
+        console.log(nodeType);
+        if (nodeType !== "START" && nodeType !== "TARGET") {
+            const newType = nodeType === "WALL" ? "NODE" : "WALL"
+            grid[row][col].type = newType
+            grid[row][col].isWall = !grid[row][col].isWall
+            setType(newType)
+        }
         setMousePressed(true)
     }
 
@@ -19,7 +22,7 @@ const Node = ({row, col, grid, setGrid, mousePressed, setMousePressed}) => {
 
     const handleMouseEnter = () => {
         if (mousePressed) {
-            if (nodeType !== "START" || nodeType !== "TARGET") {
+            if (nodeType !== "START" && nodeType !== "TARGET") {
                 const newType = nodeType === "WALL" ? "NODE" : "WALL"
                 grid[row][col].type = newType
                 grid[row][col].isWall = !grid[row][col].isWall
