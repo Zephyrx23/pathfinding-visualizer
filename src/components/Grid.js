@@ -32,6 +32,7 @@ const Grid = ({grid, setGrid, mousePressed, setMousePressed}) => {
                 setGrid={setGrid}
                 mousePressed={mousePressed}
                 setMousePressed={setMousePressed}
+                ondragstart="return false;" ondrop="return false;"
             /> )
         })
     )

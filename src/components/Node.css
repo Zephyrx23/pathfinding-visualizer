@@ -8,18 +8,34 @@
 
 .NODE {
     background-color: rgba(0,0,0,0);
+    transition: all 0.5s;
+}
+
+.NODE:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    transition: none;
 }
 
 .START {
-    background-color: rgba(0,255,0,0.75);
+    background-color: rgba(0,255,0,1);
 }
 
 .TARGET {
-    background-color: rgba(255,0,0,0.75);
+    background-color: rgba(255,0,0,1);
 }
 
 .WALL {
-    background-color: #7289DA;
+    background-color: rgb(225, 225, 225);
+    /* animation-name: wall;
+    animation-duration: 0.5s; */
+}
+
+@keyframes wall {
+    0% {
+        transform: scale(0.3);
+        background-color: #2C2F33
+    }
+    100% {background-color: rgb(225, 225, 225)}
 }
 
 .HOVER {
@@ -27,11 +43,11 @@
 }
 
 .HOVER_LEAVE {
-    animation-name: example;
-    animation-duration: 0.5s;
+    animation-name: hover;
+    animation-duration: 0.25s;
 }
 
-@keyframes example {
+@keyframes hover {
     0% {background-color: rgba(255, 255, 255, 0.075)}
     100% {background-color: rgba(0,0,0,0)}
   }

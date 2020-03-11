@@ -28,17 +28,6 @@ const Node = ({row, col, grid, setGrid, mousePressed, setMousePressed}) => {
                 grid[row][col].isWall = !grid[row][col].isWall
                 setType(newType)
             }
-            return
-        }
-
-        if (nodeType === "NODE" || nodeType === "HOVER_LEAVE") {
-            setType("HOVER")
-        }
-    }
-
-    const handleMouseLeave = () => {
-        if (nodeType === "HOVER") {
-            setType("HOVER_LEAVE")
         }
     }
 
@@ -47,7 +36,6 @@ const Node = ({row, col, grid, setGrid, mousePressed, setMousePressed}) => {
             id={`${row}-${col}`}
             className={nodeType}
             onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
         ></div>

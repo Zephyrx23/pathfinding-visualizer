@@ -3,10 +3,10 @@ import Grid from './components/Grid'
 import './components/Node.css'
 import './App.css'
 
-const ROW_SIZE    = 20
-const COL_SIZE    = 30
-const START_NODE  = {row: 10, col: 5}
-const TARGET_NODE = {row: 10, col: 25}
+const ROW_SIZE    = 40 // I'll have to scale size with browser size ughhhhhhh
+const COL_SIZE    = 26
+const START_NODE  = {col: 5, row: 13}
+const TARGET_NODE = {col: 35, row: 13}
 
 const App = () => {
     const [ grid, setGrid ] = useState(initializeGrid())
@@ -19,10 +19,6 @@ const App = () => {
         setMousePressed(false)
     }
 
-    // useEffect(() => {
-    //     document.body.addEventListener(onmouseup, handleMouseUp)
-    // }, [])
-
     return (
         <>
         <div className="App" onMouseLeave={handleMouseUp}>            
@@ -33,16 +29,15 @@ const App = () => {
                 setMousePressed={setMousePressed}
             />
         </div>
-        <div className="footer">2020 Zephyrx23</div>
         </>
     )
 }
 
 const initializeGrid = () => {
     const grid = []
-    for (let row = 0; row < ROW_SIZE; row++) {
+    for (let row = 0; row < COL_SIZE; row++) {
         const currRow = []
-        for (let col = 0; col < COL_SIZE; col++) {
+        for (let col = 0; col < ROW_SIZE; col++) {
             currRow.push(createNode(row, col))
         }
         grid.push(currRow)
