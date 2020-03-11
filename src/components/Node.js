@@ -4,7 +4,7 @@ const Node = ({row, col, grid, setGrid, mousePressed, setMousePressed}) => {
     const [ nodeType, setType ] = useState(grid[row][col].type)
     
     const handleMouseDown = () => {
-        console.log(nodeType);
+        console.log(`Type: ${nodeType} Row: ${row} Col: ${col}`);
         if (nodeType !== "START" && nodeType !== "TARGET") {
             const newType = nodeType === "WALL" ? "NODE" : "WALL"
             grid[row][col].type = newType
@@ -41,12 +41,5 @@ const Node = ({row, col, grid, setGrid, mousePressed, setMousePressed}) => {
         ></div>
     )
 }
-
-// const getGridWithWall = (grid, row, col) => {
-//     const newGrid = grid.slice()
-//     newGrid[row][col].type = "WALL"
-//     newGrid[row][col].isWall = true
-//     return(newGrid)
-// }
 
 export default Node

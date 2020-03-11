@@ -1,4 +1,4 @@
-.NODE, .START, .TARGET, .WALL, .HOVER, .HOVER_LEAVE {
+.NODE, .START, .TARGET, .WALL, .HOVER, .HOVER_LEAVE, .NODE-shortest-path, .NODE-visited {
     width: 1.5em;
     height: 1.5em;
     outline: 1px solid rgba(255, 255, 255, 0.20);
@@ -15,6 +15,15 @@
     background-color: rgba(255, 255, 255, 0.25);
     transition: none;
 }
+
+.NODE-shortest-path {
+    background-color: wheat;
+}
+
+.NODE-visited {
+    background-color: royalblue;
+}
+
 
 .START {
     background-color: rgba(0,255,0,1);
