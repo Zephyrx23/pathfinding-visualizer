@@ -11,9 +11,7 @@ const TARGET_NODE = {col: ROW_SIZE-5, row: COL_SIZE/2}
 
 const App = () => {
     const [ grid, setGrid ]                 = useState(initializeGrid())
-    const [ oldGrid, setOldGrid ]           = useState(null) // for saving old grid state so that you can animate again
     const [ mousePressed, setMousePressed ] = useState(false)
-    const [ animatedAlready, setAnimatedAlready ] = useState(false) // flag to check whether the old grid state (on first time animation)
     // const [ lockInput, setLockInput ]       = useState(false) // flag for disabling user input to the grid when animation is in progress
     let tempGrid = grid
 
@@ -23,26 +21,24 @@ const App = () => {
         setMousePressed(false)
     }
 
-    const animateDFS = (visitedNodes, shortestPath) => {
-        for (let i = 0; i <= visitedNodes.length; i++) {
-            if (i === visitedNodes.length) {
-              setTimeout(() => {
-                animateShortestPath(shortestPath);
-              }, 10 * i);
-              return;
+    const animateDFS = (visitedNodes, shortestPath, success) => {
+        for (let i = 1; i < visitedNodes.length; i++) {
+            if (i === visitedNodes.length-1 && success) {
+                setTimeout(() => {
+                    animateShortestPath(shortestPath);
+                }, 10 * i);
+                return;
             }
             setTimeout(() => {
-              const node = visitedNodes[i];
-              if (!isStartOrTargetNode(node.row, node.col)) {
-                  document.getElementById(`${node.row}-${node.col}`).className =
-                'NODE-visited';
-              }
+                const node = visitedNodes[i];
+                document.getElementById(`${node.row}-${node.col}`).className =
+                    'NODE-visited';
             }, 10 * i);
           }
     }
 
     const animateShortestPath = (shortestPath) => {
-        for (let i = 0; i < shortestPath.length; i++) {
+        for (let i = 1; i < shortestPath.length-1; i++) {
             setTimeout(() => {
               const node = shortestPath[i];
               if (!isStartOrTargetNode(node.row, node.col)) {
@@ -57,10 +53,10 @@ const App = () => {
         const newGrid = JSON.parse(JSON.stringify(grid));
         const startNode = newGrid[START_NODE.row][START_NODE.col]
         const targetNode = newGrid[TARGET_NODE.row][TARGET_NODE.col]
-        const visitedNodes = depthFirstSearch(newGrid, startNode, ROW_SIZE, COL_SIZE)
+        const [visitedNodes, success] = depthFirstSearch(newGrid, startNode, ROW_SIZE, COL_SIZE)
         const shortestPath = backtrackPath(targetNode)
-        console.log("Visited Nodes", visitedNodes);
-        animateDFS(visitedNodes, shortestPath)
+        // console.log("Visited Nodes", visitedNodes);
+        animateDFS(visitedNodes, shortestPath, success)
     }
 
     const calculateAlgo = (algorithm) => {

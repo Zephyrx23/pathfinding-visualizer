@@ -10,15 +10,13 @@ export function depthFirstSearch(grid, startNode, ROW_SIZE, COL_SIZE) {
             continue
         }
 
+        visitedNodesInOrder.push(currentNode)
+
         if (currentNode.type === "TARGET") {
             // console.log(`Visited Nodes: ${visitedNodesInOrder}`);
             startNode.previousNode = null;
-            visitedNodes.pop()
-            return (visitedNodesInOrder)
+            return ([visitedNodesInOrder, true])
         }
-
-        visitedNodesInOrder.push(currentNode)
-
         
         currentNode.isVisited = true
         const row = currentNode.row
@@ -51,4 +49,5 @@ export function depthFirstSearch(grid, startNode, ROW_SIZE, COL_SIZE) {
         }
     }
 
+    return ([visitedNodesInOrder, false])
 }
