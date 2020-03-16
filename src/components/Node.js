@@ -1,7 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 const Node = ({row, col, grid, setGrid, mousePressed, setMousePressed}) => {
     const [ nodeType, setType ] = useState(grid[row][col].type)
+
+    useEffect(() => {
+        setType(grid[row][col].type)
+    },[grid, row, col])
     
     const handleMouseDown = () => {
         console.log(`Type: ${nodeType} Row: ${row} Col: ${col}`);

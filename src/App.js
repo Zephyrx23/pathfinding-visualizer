@@ -1,18 +1,21 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Grid from './components/Grid'
 import {depthFirstSearch} from './algorithms/depthFirstSearch.js'
 import './components/Node.css'
 import './App.css'
 
-const ROW_SIZE    = 10 // I'll have to scale size with browser size ughhhhhhh
-const COL_SIZE    = 10
-const START_NODE  = {col: 1, row: 5}
-const TARGET_NODE = {col: 8, row: 5}
+const ROW_SIZE    = 40 // I'll have to scale size with browser size ughhhhhhh
+const COL_SIZE    = 30
+const START_NODE  = {col: 5, row: COL_SIZE/2}
+const TARGET_NODE = {col: ROW_SIZE-5, row: COL_SIZE/2}
 
 const App = () => {
-    const [ grid, setGrid ] = useState(initializeGrid())
+    const [ grid, setGrid ]                 = useState(initializeGrid())
+    const [ oldGrid, setOldGrid ]           = useState(null) // for saving old grid state so that you can animate again
     const [ mousePressed, setMousePressed ] = useState(false)
-    const tempGrid = grid
+    const [ animatedAlready, setAnimatedAlready ] = useState(false) // flag to check whether the old grid state (on first time animation)
+    // const [ lockInput, setLockInput ]       = useState(false) // flag for disabling user input to the grid when animation is in progress
+    let tempGrid = grid
 
     const handleMouseUp = () => {
         const newGrid = tempGrid.slice()
@@ -20,18 +23,20 @@ const App = () => {
         setMousePressed(false)
     }
 
-    const animateDFS = (shortestPath) => {
-        for (let i = 0; i <= shortestPath.length; i++) {
-            if (i === shortestPath.length) {
+    const animateDFS = (visitedNodes, shortestPath) => {
+        for (let i = 0; i <= visitedNodes.length; i++) {
+            if (i === visitedNodes.length) {
               setTimeout(() => {
                 animateShortestPath(shortestPath);
               }, 10 * i);
               return;
             }
             setTimeout(() => {
-              const node = shortestPath[i];
-              document.getElementById(`${node.row}-${node.col}`).className =
+              const node = visitedNodes[i];
+              if (!isStartOrTargetNode(node.row, node.col)) {
+                  document.getElementById(`${node.row}-${node.col}`).className =
                 'NODE-visited';
+              }
             }, 10 * i);
           }
     }
@@ -40,24 +45,64 @@ const App = () => {
         for (let i = 0; i < shortestPath.length; i++) {
             setTimeout(() => {
               const node = shortestPath[i];
-              document.getElementById(`${node.row}-${node.col}`).className =
-                'NODE-shortest-path';
+              if (!isStartOrTargetNode(node.row, node.col)) {
+                document.getElementById(`${node.row}-${node.col}`).className =
+                    'NODE-shortest-path';
+              }
             }, 50 * i);
           }
     }
 
     const calculateDFS = () => {
-        const newGrid = {...grid}
+        const newGrid = JSON.parse(JSON.stringify(grid));
         const startNode = newGrid[START_NODE.row][START_NODE.col]
         const targetNode = newGrid[TARGET_NODE.row][TARGET_NODE.col]
-        const shortestPath = depthFirstSearch(newGrid, startNode, targetNode, ROW_SIZE, COL_SIZE)
-        animateDFS(shortestPath)
+        const visitedNodes = depthFirstSearch(newGrid, startNode, ROW_SIZE, COL_SIZE)
+        const shortestPath = backtrackPath(targetNode)
+        console.log("Visited Nodes", visitedNodes);
+        animateDFS(visitedNodes, shortestPath)
+    }
+
+    const calculateAlgo = (algorithm) => {
+        resetGridWithWalls()
+        switch (algorithm) {
+            case "DFS":
+                calculateDFS()
+                break;
+        }
+    }
+
+    const resetGrid = () => {
+        setGrid(initializeGrid())
+        for (let row = 0; row < COL_SIZE; row++) {
+            for (let col = 0; col < ROW_SIZE; col++) {
+                if (!isStartOrTargetNode(row, col)) {
+                    document.getElementById(`${row}-${col}`).className =
+                        'NODE';
+                }
+            }
+        }  
+    }
+
+    const resetGridWithWalls = () => {
+        for (let row = 0; row < COL_SIZE; row++) {
+            for (let col = 0; col < ROW_SIZE; col++) {
+                const classType = document.getElementById(`${row}-${col}`).className;
+                if (classType === 'NODE-visited' || classType === 'NODE-shortest-path') {
+                    document.getElementById(`${row}-${col}`).className =
+                        'NODE';
+                }
+            }
+        }  
     }
 
     return (
         <>
-        <button onClick={calculateDFS}>
+        <button onClick={() => calculateAlgo("DFS")}>
             Visualize Algorithm (DFS)
+        </button>
+        <button onClick={resetGrid}>
+            Reset
         </button>
         <div className="App" onMouseLeave={handleMouseUp}>            
             <Grid 
@@ -102,6 +147,22 @@ const getType = (row, col) => {
         START_NODE.row === row && START_NODE.col === col ? "START" :
         TARGET_NODE.row === row && TARGET_NODE.col === col ? "TARGET" : "NODE"
     )
+}
+
+const isStartOrTargetNode = (row, col)  => {
+    return (row === START_NODE.row  && col === START_NODE.col) 
+        || (row === TARGET_NODE.row && col === TARGET_NODE.col);
+}
+
+function backtrackPath(targetNode) {
+    const shortestPath = []
+    let currentNode = targetNode
+    while (currentNode !== null) {
+        shortestPath.unshift(currentNode)
+        currentNode = currentNode.previousNode
+    } 
+
+    return shortestPath;
 }
 
 export default App
