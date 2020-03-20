@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
 import Grid from './components/Grid'
-import {depthFirstSearch} from './algorithms/depthFirstSearch.js'
+import depthFirstSearch from './algorithms/depthFirstSearch.js'
+import breadthFirstSearch from './algorithms/breadthFirstSearch.js'
+import Button from 'react-bootstrap/Button'
+import SplitButton from 'react-bootstrap/SplitButton'
+import Dropdown from 'react-bootstrap/Dropdown'
 import './components/Node.css'
 import './App.css'
 
@@ -12,7 +16,8 @@ const TARGET_NODE = {col: ROW_SIZE-5, row: COL_SIZE/2}
 const App = () => {
     const [ grid, setGrid ]                 = useState(initializeGrid())
     const [ mousePressed, setMousePressed ] = useState(false)
-    // const [ lockInput, setLockInput ]       = useState(false) // flag for disabling user input to the grid when animation is in progress
+    const [ isAnimating, setIsAnimating ]   = useState(false)
+    const [ algo, setAlgo ]                 = useState("Select an algorithm")
     let tempGrid = grid
 
     const handleMouseUp = () => {
@@ -21,11 +26,15 @@ const App = () => {
         setMousePressed(false)
     }
 
-    const animateDFS = (visitedNodes, shortestPath, success) => {
+    const animateUnweighted = (visitedNodes, shortestPath, success) => {
         for (let i = 1; i < visitedNodes.length; i++) {
-            if (i === visitedNodes.length-1 && success) {
+            if (i === visitedNodes.length-1) {
                 setTimeout(() => {
-                    animateShortestPath(shortestPath);
+                    if (success) {
+                        animateShortestPath(shortestPath);
+                    } else {
+                        animationCleanup()
+                    }
                 }, 10 * i);
                 return;
             }
@@ -45,8 +54,15 @@ const App = () => {
                 document.getElementById(`${node.row}-${node.col}`).className =
                     'NODE-shortest-path';
               }
+              if (i === shortestPath.length-2) {
+                animationCleanup()
+              }
             }, 50 * i);
           }
+    }
+
+    const animationCleanup = () => {
+        setIsAnimating(false)
     }
 
     const calculateDFS = () => {
@@ -55,15 +71,30 @@ const App = () => {
         const targetNode = newGrid[TARGET_NODE.row][TARGET_NODE.col]
         const [visitedNodes, success] = depthFirstSearch(newGrid, startNode, ROW_SIZE, COL_SIZE)
         const shortestPath = backtrackPath(targetNode)
-        // console.log("Visited Nodes", visitedNodes);
-        animateDFS(visitedNodes, shortestPath, success)
+        animateUnweighted(visitedNodes, shortestPath, success)
+    }
+
+    const calculateBFS = () => {
+        const newGrid = JSON.parse(JSON.stringify(grid));
+        const startNode = newGrid[START_NODE.row][START_NODE.col]
+        const targetNode = newGrid[TARGET_NODE.row][TARGET_NODE.col]
+        const [visitedNodes, success] = breadthFirstSearch(newGrid, startNode, ROW_SIZE, COL_SIZE)
+        const shortestPath = backtrackPath(targetNode)
+        animateUnweighted(visitedNodes, shortestPath, success)
     }
 
     const calculateAlgo = (algorithm) => {
+        setIsAnimating(true)
         resetGridWithWalls()
         switch (algorithm) {
-            case "DFS":
+            case "Depth First Search":
                 calculateDFS()
+                break;
+            case "Breadth First Search":
+                calculateBFS()
+                break;
+            default:
+                window.alert("Please select an algorithm")
                 break;
         }
     }
@@ -94,12 +125,20 @@ const App = () => {
 
     return (
         <>
-        <button onClick={() => calculateAlgo("DFS")}>
-            Visualize Algorithm (DFS)
-        </button>
-        <button onClick={resetGrid}>
-            Reset
-        </button>
+        <SplitButton
+          variant="primary"
+          title={isAnimating ? "In Progress..." : algo}
+          disabled={isAnimating}
+          onClick={() => calculateAlgo(algo)}
+        >
+            <Dropdown.Item eventKey="1" onClick={() => setAlgo("Depth First Search")}>
+                Depth First Search
+            </Dropdown.Item>
+            <Dropdown.Item eventKey="2" onClick={() => setAlgo("Breadth First Search")}>
+                Breadth First Search
+            </Dropdown.Item>
+        </SplitButton>
+        <Button variant="secondary" onClick={resetGrid}>Reset</Button>
         <div className="App" onMouseLeave={handleMouseUp}>            
             <Grid 
                 grid={tempGrid} 

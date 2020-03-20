@@ -1,11 +1,11 @@
-export default function depthFirstSearch(grid, startNode, ROW_SIZE, COL_SIZE) {
+export default function breadthFirstSearch(grid, startNode, ROW_SIZE, COL_SIZE) {
     const visitedNodes = []
     const visitedNodesInOrder = []
     visitedNodes.push(startNode)
 
 
     while (visitedNodes.length !== 0) {
-        const currentNode = visitedNodes.pop()
+        const currentNode = visitedNodes.shift()
         if (currentNode.isWall || currentNode.isVisited) {
             continue
         }
