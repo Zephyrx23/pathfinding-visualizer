@@ -23,29 +23,17 @@ export default function depthFirstSearch(grid, startNode, ROW_SIZE, COL_SIZE) {
         const col = currentNode.col
         // console.log(`Row ${row} Col: ${col}`);
 
-        if (!(col-1 < 0)) {
-            visitedNodes.push(grid[row][col-1])
-            if (grid[row][col-1].previousNode == null) {
-                grid[row][col-1].previousNode = currentNode
+        const neighbors = []
+        if (!(col-1 < 0))               neighbors.push(grid[row][col-1])
+        if (!(row+1 > grid.length-1))   neighbors.push(grid[row+1][col])
+        if (!(col+1 > grid[0].length-1)) neighbors.push(grid[row][col+1])
+        if (!(row-1 < 0))               neighbors.push(grid[row-1][col])
+
+        for (const neighbor of neighbors) {
+            visitedNodes.push(neighbor)
+            if (neighbor.previousNode == null) {
+                neighbor.previousNode = currentNode
             }
-        }
-        if (!(row+1 > grid.length-1)) {
-            visitedNodes.push(grid[row+1][col])
-            if (grid[row+1][col].previousNode == null) {
-                grid[row+1][col].previousNode = currentNode
-            }
-        }
-        if (!(col+1 > grid[0].length-1)) {
-            visitedNodes.push(grid[row][col+1])
-            if (grid[row][col+1].previousNode == null) {
-                grid[row][col+1].previousNode = currentNode
-            }
-        }
-        if (!(row-1 < 0)) {
-            visitedNodes.push(grid[row-1][col])
-            if (grid[row-1][col].previousNode == null) {
-                grid[row-1][col].previousNode = currentNode
-            } 
         }
     }
 
