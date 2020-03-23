@@ -9,7 +9,7 @@ import './components/Node.css'
 import './App.css'
 
 const ROW_SIZE    = 40 // I'll have to scale size with browser size ughhhhhhh
-const COL_SIZE    = 30
+const COL_SIZE    = 26
 const START_NODE  = {col: 5, row: COL_SIZE/2}
 const TARGET_NODE = {col: ROW_SIZE-5, row: COL_SIZE/2}
 
@@ -28,7 +28,7 @@ const App = () => {
 
     const animateUnweighted = (visitedNodes, shortestPath, success) => {
         for (let i = 1; i < visitedNodes.length; i++) {
-            if (i === visitedNodes.length-1) {
+            if (i === visitedNodes.length-1 && success) {
                 setTimeout(() => {
                     if (success) {
                         animateShortestPath(shortestPath);
@@ -42,6 +42,7 @@ const App = () => {
                 const node = visitedNodes[i];
                 document.getElementById(`${node.row}-${node.col}`).className =
                     'NODE-visited';
+                if (i === visitedNodes.length-1) animationCleanup()
             }, 10 * i);
           }
     }
@@ -65,20 +66,30 @@ const App = () => {
         setIsAnimating(false)
     }
 
-    const calculateDFS = () => {
+    const getNewStartTargetGrid = () => {
         const newGrid = JSON.parse(JSON.stringify(grid));
         const startNode = newGrid[START_NODE.row][START_NODE.col]
         const targetNode = newGrid[TARGET_NODE.row][TARGET_NODE.col]
-        const [visitedNodes, success] = depthFirstSearch(newGrid, startNode, ROW_SIZE, COL_SIZE)
+        return [newGrid, startNode, targetNode];
+    }
+
+    const calculateDFS = () => {
+        const [newGrid, startNode, targetNode] = getNewStartTargetGrid()
+        const [visitedNodes, success] = depthFirstSearch(newGrid, startNode)
         const shortestPath = backtrackPath(targetNode)
         animateUnweighted(visitedNodes, shortestPath, success)
     }
 
     const calculateBFS = () => {
-        const newGrid = JSON.parse(JSON.stringify(grid));
-        const startNode = newGrid[START_NODE.row][START_NODE.col]
-        const targetNode = newGrid[TARGET_NODE.row][TARGET_NODE.col]
-        const [visitedNodes, success] = breadthFirstSearch(newGrid, startNode, ROW_SIZE, COL_SIZE)
+        const [newGrid, startNode, targetNode] = getNewStartTargetGrid()
+        const [visitedNodes, success] = breadthFirstSearch(newGrid, startNode)
+        const shortestPath = backtrackPath(targetNode)
+        animateUnweighted(visitedNodes, shortestPath, success)
+    }
+
+    const calculateDijkstra = () => {
+        const [newGrid, startNode, targetNode] = getNewStartTargetGrid()
+        const [visitedNodes, success] = breadthFirstSearch(newGrid, startNode)
         const shortestPath = backtrackPath(targetNode)
         animateUnweighted(visitedNodes, shortestPath, success)
     }
@@ -93,8 +104,12 @@ const App = () => {
             case "Breadth First Search":
                 calculateBFS()
                 break;
+            case "Dijkstra's Algorithm":
+                calculateDijkstra()
+                break;
             default:
                 window.alert("Please select an algorithm")
+                setIsAnimating(false)
                 break;
         }
     }
@@ -137,6 +152,9 @@ const App = () => {
             <Dropdown.Item eventKey="2" onClick={() => setAlgo("Breadth First Search")}>
                 Breadth First Search
             </Dropdown.Item>
+            <Dropdown.Item eventKey="3" onClick={() => setAlgo("Dijkstra's Algorithm")}>
+                Dijkstra's Algorithm
+            </Dropdown.Item>
         </SplitButton>
         <Button variant="secondary" onClick={resetGrid}>Reset</Button>
         <div className="App" onMouseLeave={handleMouseUp}>            
@@ -174,6 +192,8 @@ const createNode= (row, col) => {
         isVisited:    false,
         isWall:       false,
         previousNode: null,
+        distance:     Infinity,
+        weight:       1,
     })
 }
 

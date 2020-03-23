@@ -29,13 +29,13 @@ export default function breadthFirstSearch(grid, startNode, ROW_SIZE, COL_SIZE) 
                 grid[row][col-1].previousNode = currentNode
             }
         }
-        if (!(row+1 > COL_SIZE-1)) {
+        if (!(row+1 > grid.length-1)) {
             visitedNodes.push(grid[row+1][col])
             if (grid[row+1][col].previousNode == null) {
                 grid[row+1][col].previousNode = currentNode
             }
         }
-        if (!(col+1 > ROW_SIZE-1)) {
+        if (!(col+1 > grid[0].length-1)) {
             visitedNodes.push(grid[row][col+1])
             if (grid[row][col+1].previousNode == null) {
                 grid[row][col+1].previousNode = currentNode
