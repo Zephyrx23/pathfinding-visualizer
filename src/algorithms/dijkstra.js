@@ -1,4 +1,4 @@
-export function dijkstra(grid, startNode) {
+export default function dijkstra(grid, startNode) {
     const visitedNodesInOrder = []
     startNode.distance = 0
     const unvisitedNodes = unpackGrid(grid)
@@ -8,19 +8,19 @@ export function dijkstra(grid, startNode) {
         const closestNode = unvisitedNodes.shift()
 
         if (closestNode.isWall) continue
-        if (closestNode.distance === Infinity) return visitedNodesInOrder
+        if (closestNode.distance === 99999) return [visitedNodesInOrder, false]
         
         closestNode.isVisited = true
         visitedNodesInOrder.push(closestNode)
         if (closestNode.type === "TARGET") {
             startNode.previousNode = null;
-            return visitedNodesInOrder
+            return [visitedNodesInOrder, true]
         }
         updateUnvisitedNeighbors(closestNode, grid)
     }
 }
 
-const unpackGrid = () => {
+const unpackGrid = (grid) => {
     const nodes = []
     for (const row of grid) {
         for (const node of row) {
@@ -35,10 +35,13 @@ const sortNodesByDistance = (unvisitedNodes) => {
 }
 
 const updateUnvisitedNeighbors = (closestNode, grid) => {
-    const unvisitedNeighbors = getUnvisitedNeighbors(node, grid);
+    const unvisitedNeighbors = getUnvisitedNeighbors(closestNode, grid);
     for (const neighbor of unvisitedNeighbors) {
-        neighbor.distance = closestNode.distance + neighbor.weight;
-        neighbor.previousNode = closestNode;
+        const newDistance = closestNode.distance + neighbor.weight;
+        if (newDistance < neighbor.distance) {
+            neighbor.distance = newDistance
+            neighbor.previousNode = closestNode
+        }
     }
 }
 

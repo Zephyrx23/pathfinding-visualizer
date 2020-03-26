@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 import Grid from './components/Grid'
 import depthFirstSearch from './algorithms/depthFirstSearch.js'
 import breadthFirstSearch from './algorithms/breadthFirstSearch.js'
+import dijkstra from './algorithms/dijkstra.js'
 import Button from 'react-bootstrap/Button'
 import SplitButton from 'react-bootstrap/SplitButton'
+import DropdownButton from 'react-bootstrap/DropdownButton'
 import Dropdown from 'react-bootstrap/Dropdown'
 import './components/Node.css'
 import './App.css'
@@ -11,13 +13,14 @@ import './App.css'
 const ROW_SIZE    = 40 // I'll have to scale size with browser size ughhhhhhh
 const COL_SIZE    = 26
 const START_NODE  = {col: 5, row: COL_SIZE/2}
-const TARGET_NODE = {col: ROW_SIZE-5, row: COL_SIZE/2}
+const TARGET_NODE = {col: ROW_SIZE-6, row: COL_SIZE/2}
 
 const App = () => {
     const [ grid, setGrid ]                 = useState(initializeGrid())
     const [ mousePressed, setMousePressed ] = useState(false)
     const [ isAnimating, setIsAnimating ]   = useState(false)
     const [ algo, setAlgo ]                 = useState("Select an algorithm")
+    const [ clickType, setClickType ]       = useState("Wall")
     let tempGrid = grid
 
     const handleMouseUp = () => {
@@ -89,7 +92,7 @@ const App = () => {
 
     const calculateDijkstra = () => {
         const [newGrid, startNode, targetNode] = getNewStartTargetGrid()
-        const [visitedNodes, success] = breadthFirstSearch(newGrid, startNode)
+        const [visitedNodes, success] = dijkstra(newGrid, startNode)
         const shortestPath = backtrackPath(targetNode)
         animateUnweighted(visitedNodes, shortestPath, success)
     }
@@ -156,13 +159,26 @@ const App = () => {
                 Dijkstra's Algorithm
             </Dropdown.Item>
         </SplitButton>
-        <Button variant="secondary" onClick={resetGrid}>Reset</Button>
+        <SplitButton
+          variant="info"
+          title={clickType}
+          disabled={isAnimating}
+        >
+            <Dropdown.Item eventKey="1" onClick={() => setClickType("Wall")}>
+                Wall
+            </Dropdown.Item>
+            <Dropdown.Item eventKey="2" onClick={() => setClickType("Weight")}>
+                Weight
+            </Dropdown.Item>
+        </SplitButton>
+        <Button variant="secondary" onClick={resetGrid} disabled={isAnimating}>Reset</Button>
         <div className="App" onMouseLeave={handleMouseUp}>            
             <Grid 
                 grid={tempGrid} 
                 setGrid={setGrid}
                 mousePressed={mousePressed}
                 setMousePressed={setMousePressed}
+                clickType={clickType}
             />
         </div>
         </>
@@ -192,7 +208,7 @@ const createNode= (row, col) => {
         isVisited:    false,
         isWall:       false,
         previousNode: null,
-        distance:     Infinity,
+        distance:     99999,
         weight:       1,
     })
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import Node from "./Node.js";
 
-const Row = ({col, grid, setGrid, mousePressed, setMousePressed}) => {
+const Row = ({col, grid, setGrid, mousePressed, setMousePressed, clickType}) => {
     return(
         <div>
             {col.map((node, rowIdx) => {
@@ -16,13 +16,14 @@ const Row = ({col, grid, setGrid, mousePressed, setMousePressed}) => {
                     setGrid={setGrid}
                     mousePressed={mousePressed}
                     setMousePressed={setMousePressed}
+                    clickType={clickType}
                 />)
             })}
         </div>
     )
 }
 
-const Grid = ({grid, setGrid, mousePressed, setMousePressed}) => {
+const Grid = ({grid, setGrid, mousePressed, setMousePressed, clickType}) => {
     
     return (grid.map((col, colIdx) => {
             return (<Row 
@@ -32,7 +33,7 @@ const Grid = ({grid, setGrid, mousePressed, setMousePressed}) => {
                 setGrid={setGrid}
                 mousePressed={mousePressed}
                 setMousePressed={setMousePressed}
-                ondragstart="return false;" ondrop="return false;"
+                clickType={clickType}
             /> )
         })
     )

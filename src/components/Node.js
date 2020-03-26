@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
+import weightIcon from '../images/weight.png'
 
-const Node = ({row, col, grid, setGrid, mousePressed, setMousePressed}) => {
+
+const Node = ({row, col, grid, setGrid, mousePressed, setMousePressed, clickType}) => {
     const [ nodeType, setType ] = useState(grid[row][col].type)
 
     useEffect(() => {
@@ -9,7 +11,7 @@ const Node = ({row, col, grid, setGrid, mousePressed, setMousePressed}) => {
     
     const handleMouseDown = () => {
         console.log(`Type: ${nodeType} Row: ${row} Col: ${col}`);
-        setWall()
+        clickType === "Wall" ? setWall() : setWeight();
         setMousePressed(true)
     }
 
@@ -21,7 +23,7 @@ const Node = ({row, col, grid, setGrid, mousePressed, setMousePressed}) => {
 
     const handleMouseEnter = () => {
         if (mousePressed) {
-            setWall()
+            clickType === "Wall" ? setWall() : setWeight();
         }
     }
 
@@ -30,6 +32,16 @@ const Node = ({row, col, grid, setGrid, mousePressed, setMousePressed}) => {
             const newType = nodeType === "WALL" ? "NODE" : "WALL"
             grid[row][col].type = newType
             grid[row][col].isWall = !grid[row][col].isWall
+            grid[row][col].weight = newType === "WEIGHT" ? 2 : 1
+            setType(newType)
+        }
+    }
+
+    const setWeight = () => {
+        if (nodeType !== "START" && nodeType !== "TARGET") {
+            const newType = nodeType === "WEIGHT" ? "NODE" : "WEIGHT"
+            grid[row][col].type = newType
+            grid[row][col].weight = newType === "WEIGHT" ? 4 : 1
             setType(newType)
         }
     }
@@ -41,7 +53,9 @@ const Node = ({row, col, grid, setGrid, mousePressed, setMousePressed}) => {
             onMouseEnter={handleMouseEnter}
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
-        ></div>
+        >
+            {nodeType === "WEIGHT" ? <img className="img" src={weightIcon} alt="weight" ></img> : ""}
+        </div>
     )
 }
 
