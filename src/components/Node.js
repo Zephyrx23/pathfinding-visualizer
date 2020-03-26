@@ -41,7 +41,7 @@ const Node = ({row, col, grid, setGrid, mousePressed, setMousePressed, clickType
         if (nodeType !== "START" && nodeType !== "TARGET") {
             const newType = nodeType === "WEIGHT" ? "NODE" : "WEIGHT"
             grid[row][col].type = newType
-            grid[row][col].weight = newType === "WEIGHT" ? 4 : 1
+            grid[row][col].weight = newType === "WEIGHT" ? 8 : 1
             setType(newType)
         }
     }

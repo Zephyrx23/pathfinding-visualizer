@@ -5,8 +5,8 @@ import breadthFirstSearch from './algorithms/breadthFirstSearch.js'
 import dijkstra from './algorithms/dijkstra.js'
 import Button from 'react-bootstrap/Button'
 import SplitButton from 'react-bootstrap/SplitButton'
-import DropdownButton from 'react-bootstrap/DropdownButton'
 import Dropdown from 'react-bootstrap/Dropdown'
+import Modal from 'react-bootstrap/Modal'
 import './components/Node.css'
 import './App.css'
 
@@ -19,8 +19,10 @@ const App = () => {
     const [ grid, setGrid ]                 = useState(initializeGrid())
     const [ mousePressed, setMousePressed ] = useState(false)
     const [ isAnimating, setIsAnimating ]   = useState(false)
-    const [ algo, setAlgo ]                 = useState("Select an algorithm")
+    const [ algo, setAlgo ]                 = useState("Dijkstra's Algorithm")
     const [ clickType, setClickType ]       = useState("Wall")
+    const [ showAlgoInfo, setShowAlgoInfo ] = useState(false)
+    const [ showTypeInfo, setShowTypeInfo ] = useState(false)
     let tempGrid = grid
 
     const handleMouseUp = () => {
@@ -99,7 +101,7 @@ const App = () => {
 
     const calculateAlgo = (algorithm) => {
         setIsAnimating(true)
-        resetGridWithWalls()
+        resetAnimatedGrid()
         switch (algorithm) {
             case "Depth First Search":
                 calculateDFS()
@@ -129,7 +131,7 @@ const App = () => {
         }  
     }
 
-    const resetGridWithWalls = () => {
+    const resetAnimatedGrid = () => {
         for (let row = 0; row < COL_SIZE; row++) {
             for (let col = 0; col < ROW_SIZE; col++) {
                 const classType = document.getElementById(`${row}-${col}`).className;
@@ -144,10 +146,10 @@ const App = () => {
     return (
         <>
         <SplitButton
-          variant="primary"
+          variant="info"
           title={isAnimating ? "In Progress..." : algo}
           disabled={isAnimating}
-          onClick={() => calculateAlgo(algo)}
+          onClick={() => setShowAlgoInfo(true)}
         >
             <Dropdown.Item eventKey="1" onClick={() => setAlgo("Depth First Search")}>
                 Depth First Search
@@ -159,10 +161,21 @@ const App = () => {
                 Dijkstra's Algorithm
             </Dropdown.Item>
         </SplitButton>
+        <Modal size="lg" show={showAlgoInfo} onHide={() => setShowAlgoInfo(false)}>
+            <Modal.Header closeButton>
+            <Modal.Title>Algorithms</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>Select an pathfinding algorithm from the dropdown. <br /><br />
+                Note that unweighted algorithms (Depth First Search, Breadth First Search) will not take into account any weights placed on the field.<br /><br />
+                Weighted algorithms have a cost of 1 to travel to any adjacent node and a cost 8 to travel to a weighted one. 
+                These will calculate the shortest path to get to the target, minimizing the total cost to get there.
+            </Modal.Body>
+        </Modal>
         <SplitButton
           variant="info"
           title={clickType}
           disabled={isAnimating}
+          onClick={() => setShowTypeInfo(true)}
         >
             <Dropdown.Item eventKey="1" onClick={() => setClickType("Wall")}>
                 Wall
@@ -171,7 +184,20 @@ const App = () => {
                 Weight
             </Dropdown.Item>
         </SplitButton>
-        <Button variant="secondary" onClick={resetGrid} disabled={isAnimating}>Reset</Button>
+        <Modal size="lg" show={showTypeInfo} onHide={() => setShowTypeInfo(false)}>
+            <Modal.Header closeButton>
+            <Modal.Title>Wall/Weight Interation</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>Click and hold on any node to create/remove walls or weights. <br />
+                Walls cannot be traversed by the path while weights can be travsered. <br /><br />
+                Weights "cost" more to travel to where the default cost to travel to an adjacent node is 1.
+                To be specific, it costs 8 to travel to a weighted node. 
+                Only Dijkstra's Algorithm can take advantage of weights. The other algorithms will ignore them. 
+            </Modal.Body>
+        </Modal>
+        <Button variant="primary" onClick={() => calculateAlgo(algo)} disabled={isAnimating}>Animate Algorithm</Button>
+        <Button variant="secondary" onClick={resetGrid} disabled={isAnimating}>Full Reset</Button>
+        <Button variant="secondary" onClick={resetAnimatedGrid} disabled={isAnimating}>Reset Path</Button>
         <div className="App" onMouseLeave={handleMouseUp}>            
             <Grid 
                 grid={tempGrid} 
