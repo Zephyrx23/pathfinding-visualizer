@@ -13,12 +13,15 @@ const Parameters = ({isAnimating, algo, setAlgo, showAlgoInfo, setShowAlgoInfo,
           disabled={isAnimating}
           onClick={() => setShowAlgoInfo(true)}
         >
+            <Dropdown.Header>Unweighted Algorithms</Dropdown.Header>
             <Dropdown.Item eventKey="1" onClick={() => setAlgo("Depth First Search")}>
                 Depth First Search
             </Dropdown.Item>
             <Dropdown.Item eventKey="2" onClick={() => setAlgo("Breadth First Search")}>
                 Breadth First Search
             </Dropdown.Item>
+            <Dropdown.Divider />
+            <Dropdown.Header>Weighted Algorithms</Dropdown.Header>
             <Dropdown.Item eventKey="3" onClick={() => setAlgo("Dijkstra's Algorithm")}>
                 Dijkstra's Algorithm
             </Dropdown.Item>
@@ -57,7 +60,7 @@ const Parameters = ({isAnimating, algo, setAlgo, showAlgoInfo, setShowAlgoInfo,
                 Walls cannot be traversed by the path while weights can be travsered. <br /><br />
                 Weights "cost" more to travel to where the default cost to travel to an adjacent node is 1.
                 To be specific, it costs 8 to travel to a weighted node. 
-                Only Dijkstra's Algorithm can take advantage of weights. The other algorithms will ignore them. 
+                Weights will only work with weighted algorithms.
             </Modal.Body>
         </Modal>
         </>
