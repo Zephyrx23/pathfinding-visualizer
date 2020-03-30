@@ -3,7 +3,7 @@ import Node from "./Node.js";
 
 const Row = ({col, grid, setGrid, mousePressed, setMousePressed, clickType}) => {
     return(
-        <div>
+        <div style={{clear:"both"}}>
             {col.map((node, rowIdx) => {
                 // if (node.type === "WALL") {
                 //     console.log(`Row: ${node.row}, Col: ${node.col} is WALL`);

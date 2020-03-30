@@ -9,8 +9,8 @@ import Button from 'react-bootstrap/Button'
 import './components/Node.css'
 import './App.css'
 
-const ROW_SIZE    = 40 // I'll have to scale size with browser size ughhhhhhh
-const COL_SIZE    = 26
+const ROW_SIZE    = 50 // I'll have to scale size with browser size ughhhhhhh
+const COL_SIZE    = 24
 const START_NODE  = {col: 5, row: COL_SIZE/2}
 const TARGET_NODE = {col: ROW_SIZE-6, row: COL_SIZE/2}
 
@@ -155,20 +155,22 @@ const App = () => {
 
     return (
         <>
-        <Parameters
-            isAnimating={isAnimating}
-            algo={algo}
-            setAlgo={setAlgo}
-            showAlgoInfo={showAlgoInfo}
-            setShowAlgoInfo={setShowAlgoInfo} 
-            clickType={clickType}
-            setClickType={setClickType}
-            showTypeInfo={showTypeInfo}
-            setShowTypeInfo={setShowTypeInfo}
-        />
-        <Button variant="primary" onClick={() => calculateAlgo(algo)} disabled={isAnimating}>Animate Algorithm</Button>
-        <Button variant="secondary" onClick={resetGrid} disabled={isAnimating}>Full Reset</Button>
-        <Button variant="secondary" onClick={resetAnimatedGrid} disabled={isAnimating}>Reset Path</Button>
+        <div className="Menu">
+            <Parameters
+                isAnimating={isAnimating}
+                algo={algo}
+                setAlgo={setAlgo}
+                showAlgoInfo={showAlgoInfo}
+                setShowAlgoInfo={setShowAlgoInfo} 
+                clickType={clickType}
+                setClickType={setClickType}
+                showTypeInfo={showTypeInfo}
+                setShowTypeInfo={setShowTypeInfo}
+            />
+            <Button variant="primary" onClick={() => calculateAlgo(algo)} disabled={isAnimating}>Animate Algorithm</Button>
+            <Button variant="secondary" onClick={resetGrid} disabled={isAnimating}>Full Reset</Button>
+            <Button variant="secondary" onClick={resetAnimatedGrid} disabled={isAnimating}>Reset Path</Button>
+        </div>
         <div className="App" onMouseLeave={handleMouseUp}>            
             <Grid 
                 grid={tempGrid} 
