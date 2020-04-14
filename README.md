@@ -15,3 +15,4 @@ Select from four different algorithms to visualize including:
   * Depth First Search
 
 This project was created using Javascript and React.
+Interact with the project here: zephyrx23.github.io/pathfinding-visualizer/
