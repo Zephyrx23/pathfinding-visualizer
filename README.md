@@ -5,6 +5,7 @@ Click and drag anywhere on the field to create a wall. A wall is untraversable a
 [![pathfinder-example2.gif](https://s6.gifyu.com/images/pathfinder-example2.gif)](https://gifyu.com/image/lh4F)
 
 Switch the selection between walls and weights to place weights on the field. These spaces can be traversed but at a much higher cost.
+[![pathfinder-example3.gif](https://i.imgur.com/n3k9sb7.gif)](https://i.imgur.com/n3k9sb7.gif)
 
 Select from four different algorithms to visualize including:
   * Dijkstra's Algorithm
